@@ -1,1 +1,38 @@
-<p>login works!</p>
+<section class="login">
+  <mat-card class="login__container" *ngIf="loginForm">
+    <div class="login__container-header">
+      <h1 class="login__container-header-title">Login</h1>
+      <p class="login__container-header-subtitle">
+        Please login to your account
+      </p>
+    </div>
+    <div class="login__container-form">
+      <form [formGroup]="loginForm" (submit)="login()">
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" required email />
+          <mat-error *ngIf="loginForm.get('email')?.invalid">{{
+            getErrorMessage("email")
+          }}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Senha</mat-label>
+          <input matInput formControlName="password" required type="password" />
+          <mat-error *ngIf="loginForm.get('password')?.invalid">{{
+            getErrorMessage("password")
+          }}</mat-error>
+        </mat-form-field>
+        <div class="form-group">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!loginForm.valid"
+          >
+            Entrar
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</section>

@@ -1,0 +1,52 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100vh;
+
+  .login__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    padding: 1em;
+
+    width: clamp(300px, 50%, 500px);
+
+    .login__container-header {
+      display: flex;
+      justify-content: center;
+      justify-content: center;
+
+      flex-direction: column;
+
+      h1 {
+        text-align: center;
+      }
+    }
+
+    .login__container-form {
+      display: flex;
+      flex-direction: column;
+
+      width: 100%;
+
+      form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        width: 100%;
+      }
+    }
+  }
+}
