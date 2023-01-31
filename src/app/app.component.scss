@@ -1,0 +1,40 @@
+mat-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+
+  .list {
+    margin-left: 1em;
+
+    a {
+      margin: 0 0.5em;
+
+      &.active {
+        font-weight: 500;
+        background-color: white;
+        color: var(--warn-color);
+      }
+      &:hover {
+        transition: 0.2s ease-in-out;
+        font-weight: 500;
+        background-color: white;
+        color: var(--warn-color);
+      }
+    }
+  }
+}
+
+main {
+  min-width: 100vw;
+  min-height: 100vh;
+
+  &.with-toolbar {
+    margin-top: 64px;
+    padding: 1em;
+  }
+}

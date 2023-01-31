@@ -1,6 +1,22 @@
 <ng-container *ngIf="showToolbar">
-  <header></header>
-  <main>
+  <header>
+    <mat-toolbar color="warn">
+      <span>Weburn</span>
+      <div class="list">
+        <a mat-button routerLink="/home" routerLinkActive="active">Home</a>
+        <a mat-button routerLink="/items" routerLinkActive="active">Itens</a>
+      </div>
+      <span class="example-spacer"></span>
+      <button
+        mat-icon-button
+        class="example-icon"
+        aria-label="Example icon-button with share icon"
+      >
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
+  </header>
+  <main class="with-toolbar">
     <router-outlet></router-outlet>
   </main>
 </ng-container>
