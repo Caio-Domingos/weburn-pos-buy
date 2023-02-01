@@ -7,6 +7,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPtPaginatorIntl } from './core/material/pt-paginator-intl';
 import { MaterialBundleModule } from './core/material/bundle.module';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +19,9 @@ import { MaterialBundleModule } from './core/material/bundle.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialBundleModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
   ],
   providers: [{ provide: MatPaginatorIntl, useValue: getPtPaginatorIntl() }],
   bootstrap: [AppComponent],
