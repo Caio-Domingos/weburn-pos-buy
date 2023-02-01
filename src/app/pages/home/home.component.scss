@@ -1,0 +1,60 @@
+.home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .home__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    h1 {
+      text-align: center;
+    }
+
+    .home__principal-pages {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      mat-card {
+        margin: 1em;
+        padding: 1em;
+        width: clamp(250px, 30%, 450px);
+
+        mat-card-header {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+
+          text-align: center;
+        }
+
+        mat-card-content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+
+          p {
+            text-align: center;
+          }
+        }
+
+        mat-card-footer {
+          margin-top: .5em;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+
+          text-align: center;
+        }
+      }
+    }
+  }
+}

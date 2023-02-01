@@ -1,1 +1,111 @@
-<p>items works!</p>
+<!-- Mat table -->
+<main>
+  <div class="table-content">
+    <mat-form-field class="filter-field">
+      <mat-label>Filtro</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Ex. Mia"
+        #input
+      />
+    </mat-form-field>
+
+    <div class="table mat-elevation-z8" *ngIf="!!dataSource">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <!-- ID Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+          <td mat-cell *matCellDef="let row">
+            <strong>{{ row.name }}</strong>
+          </td>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="custom-chip">
+              {{
+                row.type === ItemsType.PAGARME
+                  ? "Pagar.me"
+                  : row.type === ItemsType.GURU
+                  ? "Guru"
+                  : row.type === ItemsType.ATOMM
+                  ? "AtomM"
+                  : "-"
+              }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="compareItemID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Item externo
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.compareItemID }}
+          </td>
+        </ng-container>
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Ações</th>
+          <td mat-cell *matCellDef="let row">
+            <button
+              mat-icon-button
+              [matTooltip]="mountTooltipActions(row.actions)"
+              matTooltipClass="mat-tooltip"
+              aria-label=""
+            >
+              <mat-icon>list</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="buttons">
+          <th mat-header-cell *matHeaderCellDef>Botões</th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button aria-label="" (click)="editItem(row.id)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              aria-label="Edit button"
+              (click)="deleteItem(row.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            No data matching the filter "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page of users"
+    ></mat-paginator>
+  </div>
+
+  <!-- Fab Button to Details -->
+  <button
+    mat-fab
+    color="primary"
+    aria-label="Add company"
+    class="add-button"
+    (click)="addItem()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</main>

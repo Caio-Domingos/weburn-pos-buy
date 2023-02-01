@@ -1,1 +1,757 @@
-<p>item-details works!</p>
+<section class="item-details">
+  <div class="item-details__loading" *ngIf="item === null">
+    <mat-spinner color="warn" [diameter]="20"></mat-spinner>
+    <span>Carregando item...</span>
+  </div>
+
+  <div class="item-details__content">
+    <form #form="ngForm">
+      <h1>Detalhes do item</h1>
+
+      <!-- Detalhes básicos -->
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Nome</mat-label>
+            <input matInput [(ngModel)]="item!.name" name="name" required />
+            <mat-error *ngIf="form.controls['name']?.invalid">{{
+              getErrorMessage(form, "name")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de item</mat-label>
+            <input matInput [(ngModel)]="item!.type" name="type" required />
+            <mat-error *ngIf="form.controls['type']?.invalid">{{
+              getErrorMessage(form, "type")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Id Externo</mat-label>
+            <input
+              matInput
+              [(ngModel)]="item!.compareItemID"
+              name="compareItemID"
+              required
+            />
+            <mat-error *ngIf="form.controls['compareItemID']?.invalid">{{
+              getErrorMessage(form, "compareItemID")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col"></div>
+      </div>
+
+      <!-- Ações -->
+      <mat-form-field class="action-autocomplete" appearance="fill">
+        <mat-label>Ações do item</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Seleção de ações">
+          <mat-chip-row
+            *ngFor="let action of item?.actions"
+            (removed)="removeAction(action)"
+          >
+            {{ action }}
+            <button matChipRemove [attr.aria-label]="'remover ' + action">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+        <input
+          placeholder="Novo ação..."
+          #actionInput
+          [formControl]="actionCtrl"
+          [matChipInputFor]="chipGrid"
+          [matAutocomplete]="auto"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          (optionSelected)="selected($event)"
+        >
+          <mat-option
+            *ngFor="let action of filteredActions | async"
+            [value]="action"
+          >
+            {{ action }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <!-- Actions cards -->
+
+      <!-- Voucher -->
+      <mat-card
+        class="action-sub-form"
+        *ngIf="item!.actions.includes('VOUCHER')"
+      >
+        <mat-card-header>
+          <mat-card-title>Voucher</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Quantidade de vouchers</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.voucherConfig!.count"
+                  name="voucher__count"
+                  required
+                />
+                <mat-error *ngIf="form.controls['voucher__count']?.invalid">{{
+                  getErrorMessage(form, "voucher__count")
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col"></div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Voucher v2 -->
+      <mat-card
+        class="action-sub-form"
+        *ngIf="item!.actions.includes('VOUCHER-V2')"
+      >
+        <mat-card-header>
+          <mat-card-title>Voucher V2</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Quantidade de vouchers</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.voucherConfig!.count"
+                  name="voucher-v2__count"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-v2__count']?.invalid"
+                  >{{ getErrorMessage(form, "voucher-v2__count") }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - URL API</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.urlApi"
+                  name="voucher-v2__urlApi"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-v2__urlApi']?.invalid"
+                  >{{ getErrorMessage(form, "voucher-v2__urlApi") }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - Duração</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.duration"
+                  name="voucher-v2__duration"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-v2__duration']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-v2__duration")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - ID Lista</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.list"
+                  name="voucher-v2__list"
+                  required
+                />
+                <mat-error *ngIf="form.controls['voucher-v2__list']?.invalid">{{
+                  getErrorMessage(form, "vvoucher-v2__list")
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - ID Plano v2</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.planIdV2"
+                  name="voucher-v2__planIdV2"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-v2__planIdV2']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-v2__planIdV2")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - Voucher Field</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.customField"
+                  name="voucher-v2__customField"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-v2__customField']?.invalid"
+                  >{{
+                    getErrorMessage(form, "vvoucher-v2__customField")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Voucher Batch -->
+      <mat-card
+        class="action-sub-form"
+        *ngIf="item!.actions.includes('VOUCHER-BATCH')"
+      >
+        <mat-card-header>
+          <mat-card-title>Voucher Batch</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Quantidade de vouchers</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.voucherConfig!.count"
+                  name="voucher-batch__count"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-batch__count']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-batch__count")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - Partner</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.partner"
+                  name="voucher-batch__partner"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-batch__partner']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-batch__partner")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - Duração</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.duration"
+                  name="voucher-batch__duration"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-batch__duration']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-batch__duration")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - URL API</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.urlApi"
+                  name="voucher-batch__urlApi"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-batch__urlApi']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-batch__urlApi")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - ID Plano v2</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.planIdV2"
+                  name="voucher-batch__planIdV2"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-batch__planIdV2']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-batch__planIdV2")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - ID Lista</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.list"
+                  name="voucher-batch__list"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-batch__list']?.invalid"
+                  >{{ getErrorMessage(form, "voucher-batch__list") }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - ID Plano v2</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.prefix"
+                  name="voucher-batch__prefix"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-batch__prefix']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-batch__prefix")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - Voucher Field</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.customField"
+                  name="voucher-batch__customField"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['voucher-batch__customField']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-batch__customField")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Mfit -->
+      <mat-card class="action-sub-form" *ngIf="item!.actions.includes('MFIT')">
+        <mat-card-header>
+          <mat-card-title>MFIT</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>MFIT - Auth</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.mfitConfig!.auth"
+                  name="mfit__auth"
+                  required
+                />
+                <mat-error *ngIf="form.controls['mfit__auth']?.invalid">{{
+                  getErrorMessage(form, "mfit__auth")
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>MFIT - Token</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.mfitConfig!.token"
+                  name="mfit__token"
+                  required
+                />
+                <mat-error *ngIf="form.controls['mfit__token']?.invalid">{{
+                  getErrorMessage(form, "mfit__token")
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Weburn Sub -->
+      <mat-card
+        class="action-sub-form"
+        *ngIf="item!.actions.includes('WEBURN-SUBSCRIPTION')"
+      >
+        <mat-card-header>
+          <mat-card-title>Weburn Subscription</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - Duração</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.duration"
+                  name="websub__duration"
+                  required
+                />
+                <mat-error *ngIf="form.controls['websub__duration']?.invalid">{{
+                  getErrorMessage(form, "websub__duration")
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - Parceiro</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.partner"
+                  name="websub__partner"
+                  required
+                />
+                <mat-error *ngIf="form.controls['websub__partner']?.invalid">{{
+                  getErrorMessage(form, "websub__partner")
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Weburn Sub V2 -->
+      <mat-card
+        class="action-sub-form"
+        *ngIf="item!.actions.includes('WEBURN-SUBSCRIPTION-V2')"
+      >
+        <mat-card-header>
+          <mat-card-title>Weburn Subscription v2</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - Duração</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.duration"
+                  name="websub__duration"
+                  required
+                />
+                <mat-error *ngIf="form.controls['websub__duration']?.invalid">{{
+                  getErrorMessage(form, "websub__duration")
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Weburn - ID Plano v2</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.weburnConfig!.planIdV2"
+                  name="websub-v2__planIdV2"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['websub-v2__planIdV2']?.invalid"
+                  >{{ getErrorMessage(form, "websub-v2__planIdV2") }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Nutri Voucher -->
+      <mat-card
+        class="action-sub-form"
+        *ngIf="item!.actions.includes('NUTRI-VOUCHER')"
+      >
+        <mat-card-header>
+          <mat-card-title>Nutri Voucher</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Quantidade de vouchers</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.nutriVoucherConfig!.count"
+                  name="nutri-voucher__count"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-voucher__count']?.invalid"
+                  >{{
+                    getErrorMessage(form, "nutri-voucher__count")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - URL API</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.urlApi"
+                  name="nutri-voucher__urlApi"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-voucher__urlApi']?.invalid"
+                  >{{
+                    getErrorMessage(form, "nutri-voucher__urlApi")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Prefix do Voucher</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.nutriVoucherConfig!.prefix"
+                  name="nutri-voucher__prefix"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-voucher__prefix']?.invalid"
+                  >{{
+                    getErrorMessage(form, "nutri-voucher__prefix")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - ID Lista</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.list"
+                  name="nutri-voucher__list"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-voucher__list']?.invalid"
+                  >{{ getErrorMessage(form, "nutri-voucher__list") }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - Campo do crédito</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.nutriVoucherConfig!.creditField"
+                  name="nutri-voucher__creditField"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-voucher__creditField']?.invalid"
+                  >{{
+                    getErrorMessage(form, "nutri-voucher__creditField")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - Voucher Field</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.customField"
+                  name="nutri-voucher__customField"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-voucher__customField']?.invalid"
+                  >{{
+                    getErrorMessage(form, "voucher-v2__customField")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - Valor do crédito</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.nutriVoucherConfig!.creditValue"
+                  name="nutri-voucher__creditValue"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-voucher__creditValue']?.invalid"
+                  >{{
+                    getErrorMessage(form, "nutri-voucher__creditValue")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col"></div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Nutri Credit -->
+      <mat-card
+        class="action-sub-form"
+        *ngIf="item!.actions.includes('NUTRI-CREDIT')"
+      >
+        <mat-card-header>
+          <mat-card-title>Nutri Credit</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>Quantidade de vouchers</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.nutriVoucherConfig!.count"
+                  name="nutri-credit__count"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-credit__count']?.invalid"
+                  >{{ getErrorMessage(form, "nutri-credit__count") }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - URL API</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.urlApi"
+                  name="nutri-credit__urlApi"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-credit__urlApi']?.invalid"
+                  >{{
+                    getErrorMessage(form, "nutri-credit__urlApi")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - Campo do crédito</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.nutriVoucherConfig!.creditField"
+                  name="nutri-credit__creditField"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-credit__creditField']?.invalid"
+                  >{{
+                    getErrorMessage(form, "nutri-credit__creditField")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - ID Lista</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.acConfig!.list"
+                  name="nutri-credit__list"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-credit__list']?.invalid"
+                  >{{ getErrorMessage(form, "nutri-credit__list") }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="fill">
+                <mat-label>AC - Valor do crédito</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="item!.nutriVoucherConfig!.creditValue"
+                  name="nutri-voucher__creditValue"
+                  required
+                />
+                <mat-error
+                  *ngIf="form.controls['nutri-voucher__creditValue']?.invalid"
+                  >{{
+                    getErrorMessage(form, "nutri-voucher__creditValue")
+                  }}</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="col"></div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+  <!-- Fab Button to Details -->
+  <button
+    mat-fab
+    color="accent"
+    aria-label="Save Item"
+    class="add-button"
+    [disabled]="form.invalid"
+    (click)="save()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</section>

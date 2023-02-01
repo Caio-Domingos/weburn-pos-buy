@@ -21,7 +21,7 @@ const ptRangeLabel = (page: number, pageSize: number, length: number) => {
 export function getPtPaginatorIntl() {
   const paginatorIntl = new MatPaginatorIntl();
 
-  paginatorIntl.itemsPerPageLabel = 'Items por página:';
+  paginatorIntl.itemsPerPageLabel = 'Itens por página:';
   paginatorIntl.nextPageLabel = 'Próxima página';
   paginatorIntl.previousPageLabel = 'Página anterior';
   paginatorIntl.getRangeLabel = ptRangeLabel;

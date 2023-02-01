@@ -1,1 +1,18 @@
-<p>home works!</p>
+<section class="home">
+  <div class="home__container">
+    <h1 class="home__container-title">Home</h1>
+    <div class="home__principal-pages">
+      <mat-card *ngFor="let item of pages">
+        <mat-card-header>
+          <mat-card-title> {{ item.title }} </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ item.description }}</p>
+        </mat-card-content>
+        <mat-card-footer>
+          <a mat-button color="warn" [routerLink]="[item.url]"> Ir </a>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+</section>
