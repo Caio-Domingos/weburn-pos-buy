@@ -15,6 +15,7 @@ import {
 } from 'rxjs';
 import { Item, ItemsType } from 'src/app/core/interfaces/item.interface';
 import { mockup__items } from 'src/app/core/mockups/item.mockup';
+import { ItemService } from 'src/app/services/item.service';
 
 @Component({
   selector: 'app-items',
@@ -41,14 +42,25 @@ export class ItemsComponent {
 
   filter$: BehaviorSubject<string> = new BehaviorSubject('');
   resultsLength = 0;
+  pageSize = 5;
+  pageIndex = 0;
   // Table configuration End
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private itemService: ItemService) {
     // Table configuration Init
     const items: Item[] = [];
     this.dataSource = new MatTableDataSource(items);
 
     // Table configuration End
+
+    // this.itemService.getAllPaginated(10, undefined, 'name').subscribe({
+    //   next: (items) => {
+    //     console.log('items: ', items);
+    //   },
+    //   error: (error) => {
+    //     console.log('error: ', error);
+    //   },
+    // });
   }
 
   ngOnInit(): void {
@@ -59,53 +71,73 @@ export class ItemsComponent {
   ngAfterViewInit(): void {
     // Table configuration Init
     this.dataSource.paginator = this.paginator!;
-    this.dataSource.sort! = this.sort!;
+    // this.dataSource.sort! = this.sort!;
 
-    this.sort!.sortChange.subscribe(() => (this.paginator!.pageIndex = 0));
+    // this.sort!.sortChange.subscribe(() => (this.paginator!.pageIndex = 0));
 
-    fromEvent(this.filterInput!.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(1000),
-        map((e) => this.filterInput!.nativeElement.value.trim().toLowerCase())
-      )
-      .subscribe({
-        next: (value) => {
-          console.log('my inoput value: ', value);
-          this.filter$.next(value);
-        },
-      });
+    // fromEvent(this.filterInput!.nativeElement, 'keyup')
+    //   .pipe(
+    //     debounceTime(1000),
+    //     map((e) => this.filterInput!.nativeElement.value.trim().toLowerCase())
+    //   )
+    //   .subscribe({
+    //     next: (value) => {
+    //       console.log('my inoput value: ', value);
+    //       this.filter$.next(value);
+    //     },
+    //   });
 
     setTimeout(() => {
-      merge(this.sort!.sortChange, this.paginator!.page, this.filter$)
+      merge(this.paginator!.page, this.filter$)
         .pipe(
           startWith({}),
           switchMap((change) => {
             // Get data
-            const filter =
-              this.filterInput!.nativeElement.value.trim().toLowerCase();
-            const sort = this.sort!.active;
-            const order = this.sort!.direction;
-            const page = this.paginator!.pageIndex;
-            const limit = this.paginator!.pageSize;
+            // const filter =
+            //   this.filterInput!.nativeElement.value.trim().toLowerCase();
+            // const sort = this.sort!.active;
+            // const order = this.sort!.direction;
+            this.pageIndex = this.paginator!.pageIndex;
+            this.pageSize = this.paginator!.pageSize;
 
-            return of({ data: mockup__items, total: mockup__items.length });
+            console.log('change: ', change);
+
+            // return of({ results: mockup__items, total: mockup__items.length });
+            return this.itemService.getAllPaginated(
+              this.pageSize,
+              this.pageIndex === 0
+                ? undefined
+                : this.dataSource.data[this.dataSource.data.length - 1].name!,
+              undefined
+            );
           }),
           map((data) => {
+            // console.log('data: ', data);
             if (data === null) {
               return [];
             }
 
             this.resultsLength = data.total;
-            return data.data;
+            return data.results;
           })
         )
         .subscribe({
           next: (data) => {
             this.dataSource.data = data;
+            setTimeout(() => {
+              this.paginator!.length = this.resultsLength;
+              this.paginator!.pageIndex = this.pageIndex;
+              this.paginator!.pageSize = this.pageSize;
+            }, 200);
           },
         });
     }, 200);
     // Table configuration End
+  }
+
+  updatePagination(event: any) {
+    console.log('event: ', event);
+    if (event.pageSize !== this.pageSize) this.paginator?.firstPage();
   }
 
   // Table methods Init
