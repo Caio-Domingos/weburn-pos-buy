@@ -1,0 +1,9 @@
+<section class="dialog">
+  <h3>Tem certeza que deseja cancelar esse item?</h3>
+  <p>{{ data.name }}</p>
+
+  <div class="action-buttons">
+    <button mat-raised-button color="accent" (click)="deleteItem()">Sim</button>
+    <button mat-raised-button color="warn" (click)="cancel()">Não</button>
+  </div>
+</section>

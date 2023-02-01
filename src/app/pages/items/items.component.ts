@@ -1,4 +1,9 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -46,7 +51,11 @@ export class ItemsComponent {
   pageIndex = 0;
   // Table configuration End
 
-  constructor(private router: Router, private itemService: ItemService) {
+  constructor(
+    private router: Router,
+    private itemService: ItemService,
+    private dialog: MatDialog
+  ) {
     // Table configuration Init
     const items: Item[] = [];
     this.dataSource = new MatTableDataSource(items);
@@ -156,12 +165,53 @@ export class ItemsComponent {
     console.log('edit ', item);
     this.router.navigate(['items/', item]);
   }
-  deleteItem(item: number) {
+  deleteItem(item: Item) {
     console.log('delete', item);
+
+    const ref = this.dialog.open(DeleteConfirmationComponent, {
+      width: '250px',
+      data: item,
+    });
+
+    ref.afterClosed().subscribe({
+      next: (result) => {
+        console.log('result: ', result);
+        if (result?.deleted) {
+          this.filter$.next('');
+        }
+      },
+    });
   }
   // Table methods End
 
   mountTooltipActions(actions: string[]) {
     return actions.join('\n');
+  }
+}
+
+@Component({
+  selector: 'app-comfirmation',
+  templateUrl: 'delete-confirmation.component.html',
+  styleUrls: ['./delete-confirmation.component.scss'],
+})
+export class DeleteConfirmationComponent {
+  constructor(
+    public dialogRef: MatDialogRef<DeleteConfirmationComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Item,
+    private itemService: ItemService
+  ) {}
+
+  ngOnInit() {}
+
+  async deleteItem() {
+    console.log('delete');
+    await this.itemService.delete(this.data.id!);
+
+    this.dialogRef.close({ deleted: true });
+  }
+
+  cancel() {
+    console.log('cancel');
+    this.dialogRef.close({ deleted: false });
   }
 }

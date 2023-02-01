@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Item,
   ItemActionsList,
@@ -10,6 +10,9 @@ import { mockup__items } from 'src/app/core/mockups/item.mockup';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { map, Observable, startWith } from 'rxjs';
+import { ItemService } from 'src/app/services/item.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-item-details',
@@ -17,7 +20,7 @@ import { map, Observable, startWith } from 'rxjs';
   styleUrls: ['./item-details.component.scss'],
 })
 export class ItemDetailsComponent {
-  item: Item | null = null;
+  item: Item = this.createNewItem();
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredActions: Observable<string[]>;
@@ -27,10 +30,15 @@ export class ItemDetailsComponent {
   @ViewChild('actionInput') actionInput: ElementRef<HTMLInputElement> | null =
     null;
 
-  constructor(actRoute: ActivatedRoute) {
+  constructor(
+    actRoute: ActivatedRoute,
+    private itemService: ItemService,
+    private router: Router,
+    private snack: MatSnackBar
+  ) {
     const id = actRoute.snapshot.paramMap.get('id')!;
     if (id === 'new') {
-      this.createNewItem();
+      this.item = this.createNewItem();
     } else {
       this.getItem(id);
     }
@@ -51,11 +59,50 @@ export class ItemDetailsComponent {
   }
 
   getItem(id: string) {
-    // this.item = this.itemsService.getItem(id);
+    this.itemService.getOne(id).subscribe({
+      next: (event) => {
+        this.item = event;
+        this.fillEmptyConfigurations();
+      },
+    });
     this.item = mockup__items.find((item) => item.id === id)!;
   }
+  private fillEmptyConfigurations() {
+    if (!this.item.acConfig)
+      this.item.acConfig = {
+        urlApi: 0,
+        list: 0,
+        customField: 0,
+      };
+    if (!this.item.mfitConfig)
+      this.item.mfitConfig = {
+        duration: '',
+        auth: '',
+        token: '',
+      };
+    if (!this.item.weburnConfig)
+      this.item.weburnConfig = {
+        duration: '',
+        partner: '',
+        planIdV2: '',
+        prefix: '',
+      };
+    if (!this.item.nutriVoucherConfig)
+      this.item.nutriVoucherConfig = {
+        count: 0,
+        creditValue: 0,
+        creditField: 0,
+        prefix: '',
+      };
+    if (!this.item.voucherConfig)
+      this.item.voucherConfig = {
+        count: 0,
+        isPack: false,
+        packSku: '',
+      };
+  }
   createNewItem() {
-    this.item = {
+    return {
       id: '',
       name: '',
       type: ItemsType.PAGARME,
@@ -123,7 +170,19 @@ export class ItemDetailsComponent {
     return array.filter((item) => !filter.includes(item));
   }
 
-  save() {
+  async save() {
     console.log('save', this.item);
+    try {
+      if (this.item.id) {
+        await this.itemService.update(this.item.id, this.item);
+      } else {
+        await this.itemService.create(this.item);
+      }
+
+      this.snack.open('Item salvo com sucesso', 'OK', {
+        duration: 10000,
+      });
+      this.router.navigate(['/items']);
+    } catch (error) {}
   }
 }

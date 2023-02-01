@@ -1,0 +1,21 @@
+.dialog {
+  padding: 1em;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  text-align: center;
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+
+    button {
+      margin: 0 0.5em;
+    }
+  }
+}

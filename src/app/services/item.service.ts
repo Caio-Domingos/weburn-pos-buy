@@ -79,26 +79,26 @@ export class ItemService {
         })
       );
   }
-  // getOne(id: string) {
-  //   return this.afs
-  //     .collection<Item>(this.collection)
-  //     .doc(id)
-  //     .snapshotChanges()
-  //     .pipe(
-  //       map((doc) => {
-  //         const data = doc.payload.data();
-  //         const id = doc.payload.id;
-  //         return { ...data, id };
-  //       })
-  //     );
-  // }
-  // create(item: Item) {
-  //   return this.afs.collection(this.collection).add(item);
-  // }
-  // update(id: string, item: Item) {
-  //   return this.afs.collection(this.collection).doc(id).update(item);
-  // }
-  // delete(id: string) {
-  //   return this.afs.collection(this.collection).doc(id).delete();
-  // }
+  getOne(id: string): Observable<Item> {
+    return this.afs
+      .collection<Item>(this.collection)
+      .doc(id)
+      .snapshotChanges()
+      .pipe(
+        map((doc) => {
+          const data = (doc.payload.data() as Item);
+          const id = doc.payload.id;
+          return { ...data, id };
+        })
+      );
+  }
+  create(item: Item) {
+    return this.afs.collection(this.collection).add(item);
+  }
+  update(id: string, item: Item) {
+    return this.afs.collection(this.collection).doc(id).update(item);
+  }
+  delete(id: string) {
+    return this.afs.collection(this.collection).doc(id).delete();
+  }
 }
