@@ -13,7 +13,11 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import {
+  AngularFireAuthModule,
+  PERSISTENCE,
+  USE_DEVICE_LANGUAGE,
+} from '@angular/fire/compat/auth';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +35,11 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
     AngularFireAuthModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
   ],
-  providers: [{ provide: MatPaginatorIntl, useValue: getPtPaginatorIntl() }],
+  providers: [
+    { provide: MatPaginatorIntl, useValue: getPtPaginatorIntl() },
+    { provide: USE_DEVICE_LANGUAGE, useValue: true },
+    { provide: PERSISTENCE, useValue: 'session' },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

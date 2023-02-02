@@ -1,6 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import {
+  canActivate,
+  redirectUnauthorizedTo,
+} from '@angular/fire/compat/auth-guard';
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
+
 const routes: Routes = [
   {
     path: '',
@@ -17,11 +23,13 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home.module').then((m) => m.HomeModule),
+    ...canActivate(redirectUnauthorizedToLogin),
   },
   {
     path: 'items',
     loadChildren: () =>
       import('./pages/items/items.module').then((m) => m.ItemsModule),
+    ...canActivate(redirectUnauthorizedToLogin),
   },
   {
     path: '**',
@@ -33,6 +41,7 @@ const routes: Routes = [
       import('./pages/not-found/not-found.module').then(
         (m) => m.NotFoundModule
       ),
+    ...canActivate(redirectUnauthorizedToLogin),
   },
 ];
 

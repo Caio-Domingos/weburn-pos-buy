@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { errorCodes } from 'src/app/core/interfaces/auth.interface';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +13,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authSerivce: AuthService,
+    private snack: MatSnackBar
+  ) {
     this.createForm();
   }
 
@@ -32,5 +41,29 @@ export class LoginComponent {
       : '';
   }
 
-  login() {}
+  async login() {
+    if (this.loginForm.valid) {
+      try {
+        const auth = await this.authSerivce.login(
+          this.loginForm.controls['email'].value,
+          this.loginForm.controls['password'].value
+        );
+
+        console.log('auth', auth);
+        this.router.navigate(['/']);
+      } catch (error: any) {
+        console.error('auth error', error.code);
+        const code = error.code as string;
+        this.snack.open(
+          errorCodes[code]!.message ||
+            'Erro ao logar, contatar o administrador',
+          'Fechar',
+          {
+            duration: 5000,
+          }
+        );
+        return;
+      }
+    }
+  }
 }
