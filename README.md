@@ -1,27 +1,21 @@
-# WeburnPosBuy
+# Pos Buy - Weburn
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
+Frontend do Cloud Functions - Weburn-Voucher-Dispenser-V2
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Deploy
 
-## Code scaffolding
+Para fazer o deploy desse projeto no GCP
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+  gcloud config set project weburn-376622
+```
+```bash
+  gcloud builds submit --tag gcr.io/weburn-376622/weburn-pos-buy
+```
+```bash
+  gcloud run deploy pos-buy-frontend 
+  / --allow-unauthenticated 
+  / --platform managed 
+  / --image gcr.io/weburn-376622/weburn-pos-buy
+```
