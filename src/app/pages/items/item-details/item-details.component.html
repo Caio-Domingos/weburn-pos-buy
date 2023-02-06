@@ -21,9 +21,20 @@
             </mat-form-field>
           </div>
           <div class="col">
-            <mat-form-field appearance="fill">
+            <!-- <mat-form-field appearance="fill">
               <mat-label>Tipo de item</mat-label>
               <input matInput [(ngModel)]="item!.type" name="type" required />
+              <mat-error *ngIf="form.controls['type']?.invalid">{{
+                getErrorMessage(form, "type")
+              }}</mat-error>
+            </mat-form-field> -->
+            <mat-form-field appearance="fill">
+              <mat-label>Tipo de Item</mat-label>
+              <mat-select [(ngModel)]="item!.type" name="type" required>
+                <mat-option [value]="ItemTypes.ATOMM">Atomm</mat-option>
+                <mat-option [value]="ItemTypes.GURU">Guru</mat-option>
+                <mat-option [value]="ItemTypes.PAGARME">Pagar.me</mat-option>
+              </mat-select>
               <mat-error *ngIf="form.controls['type']?.invalid">{{
                 getErrorMessage(form, "type")
               }}</mat-error>

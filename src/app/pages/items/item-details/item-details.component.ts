@@ -21,6 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ItemDetailsComponent {
   item: Item = this.createNewItem();
+  ItemTypes = ItemsType;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredActions: Observable<string[]>;
