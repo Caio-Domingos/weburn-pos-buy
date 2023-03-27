@@ -49,7 +49,9 @@ export class ItemService {
 
     return this.afs
       .collection<Item>(this.collection, (ref) => {
-        let query : firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+        let query:
+          | firebase.firestore.CollectionReference
+          | firebase.firestore.Query = ref;
         query = query.orderBy(orderBy || 'name');
         query = query.limit(pageSize);
         if (lastDoc) {
@@ -86,17 +88,21 @@ export class ItemService {
       .snapshotChanges()
       .pipe(
         map((doc) => {
-          const data = (doc.payload.data() as Item);
+          const data = doc.payload.data() as Item;
           const id = doc.payload.id;
           return { ...data, id };
         })
       );
   }
-  create(item: Item) {
-    return this.afs.collection(this.collection).add(item);
+  async create(item: Item) {
+    const doc = await this.afs.collection<Item>(this.collection).add(item);
+    const id = doc.id;
+    await doc.update({ id });
+    return id;
   }
   update(id: string, item: Item) {
-    return this.afs.collection(this.collection).doc(id).update(item);
+    const toUpdate = { ...item, id };
+    return this.afs.collection<Item>(this.collection).doc(id).update(toUpdate);
   }
   delete(id: string) {
     return this.afs.collection(this.collection).doc(id).delete();

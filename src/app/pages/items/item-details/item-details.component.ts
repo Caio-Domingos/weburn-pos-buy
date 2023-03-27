@@ -173,6 +173,10 @@ export class ItemDetailsComponent {
 
   async save() {
     console.log('save', this.item);
+
+    this.item.compareItemID = !isNaN(+this.item.compareItemID!)
+      ? +this.item.compareItemID!
+      : this.item.compareItemID;
     try {
       if (this.item.id) {
         await this.itemService.update(this.item.id, this.item);

@@ -8,6 +8,9 @@ Frontend do Cloud Functions - Weburn-Voucher-Dispenser-V2
 Para fazer o deploy desse projeto no GCP
 
 ```bash
+  docker-compose up --no-start
+```
+```bash
   gcloud config set project weburn-376622
 ```
 ```bash
