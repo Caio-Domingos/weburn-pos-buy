@@ -32,6 +32,14 @@ const routes: Routes = [
     ...canActivate(redirectUnauthorizedToLogin),
   },
   {
+    path: 'manual-fire',
+    loadChildren: () =>
+      import('./pages/manual-fire/manual-fire.module').then(
+        (m) => m.ManualFireModule
+      ),
+  },
+
+  {
     path: '**',
     redirectTo: 'not-found',
   },

@@ -15,6 +15,7 @@ export interface Item {
     count: number;
     creditValue: number;
     creditField: number;
+    usedVoucherField: number;
 
     prefix?: string;
   };

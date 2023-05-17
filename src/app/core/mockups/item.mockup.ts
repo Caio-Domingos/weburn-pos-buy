@@ -18,6 +18,7 @@ export const mockup__items: Item[] = [
       count: 1,
       creditValue: 1,
       creditField: 1,
+      usedVoucherField: 57,
       prefix: '',
     },
 

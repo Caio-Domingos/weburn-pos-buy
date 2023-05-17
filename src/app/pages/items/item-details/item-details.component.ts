@@ -93,6 +93,8 @@ export class ItemDetailsComponent {
         count: 0,
         creditValue: 0,
         creditField: 0,
+        usedVoucherField: 0,
+
         prefix: '',
       };
     if (!this.item.voucherConfig)
@@ -118,6 +120,7 @@ export class ItemDetailsComponent {
         count: 0,
         creditValue: 0,
         creditField: 0,
+        usedVoucherField: 0,
         prefix: '',
       },
       mfitConfig: {

@@ -664,7 +664,25 @@
                   >
                 </mat-form-field>
               </div>
-              <div class="col"></div>
+              <div class="col">
+                <mat-form-field appearance="fill">
+                  <mat-label>AC - Campo do Voucher Usado</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="item!.nutriVoucherConfig!.usedVoucherField"
+                    name="nutri-voucher__usedVoucherField"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      form.controls['nutri-voucher__usedVoucherField']?.invalid
+                    "
+                    >{{
+                      getErrorMessage(form, "nutri-voucher__usedVoucherField")
+                    }}</mat-error
+                  >
+                </mat-form-field>
+              </div>
             </div>
           </mat-card-content>
         </mat-card>
