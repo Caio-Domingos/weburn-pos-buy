@@ -1,0 +1,51 @@
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  h1 {
+    margin-bottom: 1.5em;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: clamp(300px, 80%, 1000px);
+    margin: 0em auto;
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      width: clamp(300px, 40%, 500px);
+      margin-bottom: 1em;
+
+      .mat-form-field {
+        width: 100%;
+      }
+    }
+  }
+
+  .action-autocomplete {
+    width: clamp(300px, 80%, 1000px);
+    margin: 0 auto;
+    margin-top: 2em;
+  }
+
+  .action-sub-form {
+    width: clamp(300px, 80%, 1000px);
+    margin: 0 auto;
+    margin-top: 2em;
+
+    mat-card-content {
+      margin-top: 1.5em;
+    }
+  }
+}
+
+.add-button {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+}

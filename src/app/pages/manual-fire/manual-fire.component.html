@@ -1,1 +1,234 @@
-<p>manual-fire works!</p>
+<section id="manual">
+  <!-- Header -->
+  <h2 class="title">Disparo manual</h2>
+  <!-- Escolher o manual a ser enviado -->
+  <mat-button-toggle-group
+    name="toSend"
+    [(ngModel)]="toSend"
+    (change)="changeTarget($event)"
+    aria-label="Alvo de envio"
+  >
+    <mat-button-toggle [value]="choices.PAGARME">Pagar.me</mat-button-toggle>
+    <mat-button-toggle [value]="choices.GURU">Guru</mat-button-toggle>
+    <mat-button-toggle [value]="choices.ATOMM">Atomm</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <form #form="ngForm">
+    <!-- Pagar.me -->
+    <!-- getErrorMessage(form, "pagarme.id")˝ -->
+    <div class="card-container pagarme" *ngIf="toSend === choices.PAGARME">
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Sub ID</mat-label>
+            <input
+              matInput
+              [(ngModel)]="pagarme.id"
+              name="pagarme.id"
+              required
+            />
+            <mat-error *ngIf="form.controls['pagarme.id']?.invalid"></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Cliente - Nome</mat-label>
+            <input
+              matInput
+              [(ngModel)]="pagarme.event.subscription.customer.name"
+              name="pagarme.event.subscription.customer.name"
+              required
+            />
+            <mat-error
+              *ngIf="
+                form.controls['pagarme.event.subscription.customer.name']
+                  ?.invalid
+              "
+            ></mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Cliente - Email</mat-label>
+            <input
+              matInput
+              [(ngModel)]="pagarme.event.subscription.customer.email"
+              name="pagarme.event.subscription.customer.email"
+              required
+              email
+            />
+            <mat-error
+              *ngIf="
+                form.controls['pagarme.event.subscription.customer.email']
+                  ?.invalid
+              "
+            ></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>ID Plano</mat-label>
+            <input
+              matInput
+              [(ngModel)]="pagarme.event.subscription.plan.id"
+              name="pagarme.event.subscription.plan.id"
+              required
+            />
+            <mat-error
+              *ngIf="
+                form.controls['pagarme.event.subscription.plan.id']?.invalid
+              "
+            ></mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- SubID -->
+      <!-- UserName -->
+      <!-- User Email -->
+      <!-- Plan ID -->
+    </div>
+    <!-- Guru -->
+    <div class="card-container guru" *ngIf="toSend === choices.GURU">
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Cliente - Email</mat-label>
+            <input
+              matInput
+              [(ngModel)]="guru.subscriber.email"
+              name="guru.subscriber.email"
+              required
+              email
+            />
+            <mat-error
+              *ngIf="form.controls['guru.subscriber.email']?.invalid"
+            ></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Cliente - Nome</mat-label>
+            <input
+              matInput
+              [(ngModel)]="guru.subscriber.name"
+              name="guru.subscriber.name"
+              required
+            />
+            <mat-error
+              *ngIf="form.controls['guru.subscriber.name']?.invalid"
+            ></mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Cliente - N de telefone</mat-label>
+            <input
+              matInput
+              [(ngModel)]="guru.subscriber.phone_number"
+              name="guru.subscriber.phone_number"
+            />
+            <mat-error
+              *ngIf="form.controls['guru.subscriber.phone_number']?.invalid"
+            ></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Cliente - CPF</mat-label>
+            <input
+              matInput
+              [(ngModel)]="guru.subscriber.doc"
+              name="guru.subscriber.doc"
+            />
+            <mat-error
+              *ngIf="form.controls['guru.subscriber.doc']?.invalid"
+            ></mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Produto - ID</mat-label>
+            <input
+              matInput
+              [(ngModel)]="guru.product.marketplace_id"
+              name="guru.product.marketplace_id"
+              required
+            />
+            <mat-error
+              *ngIf="form.controls['guru.product.marketplace_id']?.invalid"
+            ></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+    <!-- Atomm -->
+    <div class="card-container atomm" *ngIf="toSend === choices.ATOMM">
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Evento</mat-label>
+            <input
+              matInput
+              [(ngModel)]="atomm.evento"
+              name="atomm.evento"
+              required
+            />
+            <mat-error
+              *ngIf="form.controls['atomm.evento']?.invalid"
+            ></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Status da compra</mat-label>
+            <input
+              matInput
+              [(ngModel)]="atomm.payload.status"
+              name="atomm.payload.status"
+              required
+            />
+            <mat-error
+              *ngIf="form.controls['atomm.payload.status']?.invalid"
+            ></mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Pedido - ID</mat-label>
+            <input
+              matInput
+              [(ngModel)]="atomm.payload.id_pedido"
+              name="atomm.payload.id_pedido"
+              required
+            />
+            <mat-error
+              *ngIf="form.controls['atomm.payload.id_pedido']?.invalid"
+            ></mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+
+    <button
+      mat-fab
+      color="accent"
+      aria-label="Save Item"
+      class="add-button"
+      [disabled]="form.invalid"
+      (click)="save()"
+    >
+      <mat-icon>done</mat-icon>
+    </button>
+  </form>
+</section>

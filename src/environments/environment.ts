@@ -8,4 +8,7 @@ export const environment = {
     authDomain: 'weburn-voucher-dispenser-v2.firebaseapp.com',
     messagingSenderId: '124727929749',
     measurementId: 'G-WNW79K3MJ7',
-  },};
+  },
+  functionsUrl:
+    'https://us-central1-weburn-voucher-dispenser-v2.cloudfunctions.net',
+};
