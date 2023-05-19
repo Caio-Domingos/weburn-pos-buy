@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: ${DOCKERHUB_USER}/weburn-pos-buy:latest
+    platform: ${ARCHITECTURE}
+    ports:
+      - ${FRONTEND_CONTAINER_PORT}:8080
+    networks:
+      - tay-training-network
+
+networks:
+  tay-training-network:
+
+
+
+
+
