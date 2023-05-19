@@ -18,6 +18,7 @@ import {
   PERSISTENCE,
   USE_DEVICE_LANGUAGE,
 } from '@angular/fire/compat/auth';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +35,7 @@ import {
     AngularFirestoreModule.enablePersistence({ synchronizeTabs: true }),
     AngularFireAuthModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
+    HttpClientModule
   ],
   providers: [
     { provide: MatPaginatorIntl, useValue: getPtPaginatorIntl() },

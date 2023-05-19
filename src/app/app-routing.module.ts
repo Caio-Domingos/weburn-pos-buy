@@ -37,6 +37,7 @@ const routes: Routes = [
       import('./pages/manual-fire/manual-fire.module').then(
         (m) => m.ManualFireModule
       ),
+    ...canActivate(redirectUnauthorizedToLogin),
   },
 
   {

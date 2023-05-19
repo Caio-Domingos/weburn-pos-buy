@@ -7,10 +7,10 @@ services:
     ports:
       - ${FRONTEND_CONTAINER_PORT}:8080
     networks:
-      - tay-training-network
+      - weburn-pos-buy-network
 
 networks:
-  tay-training-network:
+  weburn-pos-buy-network:
 
 
 
