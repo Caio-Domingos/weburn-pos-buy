@@ -60,6 +60,7 @@ check_success $? $duration
 
 echo -n "Criando a imagem do frontend..."
 start_time=$(date +%s)
+echo docker buildx build --push --platform ${ARCHITECTURE} -t $DOCKERHUB_USER/$FRONTEND_DIR .
 (docker buildx build --push --platform ${ARCHITECTURE} -t $DOCKERHUB_USER/$FRONTEND_DIR . >/dev/null 2>&1) & spinner
 end_time=$(date +%s)
 duration=$((end_time - start_time))
@@ -67,6 +68,7 @@ check_success $? $duration
 
 echo -n "Enviando a imagem do frontend para o DockerHub..."
 start_time=$(date +%s)
+echo docker push $DOCKERHUB_USER/$FRONTEND_DIR
 docker push $DOCKERHUB_USER/$FRONTEND_DIR >/dev/null 2>&1 & spinner
 end_time=$(date +%s)
 duration=$((end_time - start_time))
