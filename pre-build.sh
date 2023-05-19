@@ -60,7 +60,7 @@ check_success $? $duration
 
 echo -n "Criando a imagem do frontend..."
 start_time=$(date +%s)
-(docker buildx build --push --platform ${ARCHITECTURE} -t $DOCKERHUB_USER/tay-frontend . >/dev/null 2>&1) & spinner
+(docker buildx build --push --platform ${ARCHITECTURE} -t $DOCKERHUB_USER/$FRONTEND_DIR . >/dev/null 2>&1) & spinner
 end_time=$(date +%s)
 duration=$((end_time - start_time))
 check_success $? $duration
