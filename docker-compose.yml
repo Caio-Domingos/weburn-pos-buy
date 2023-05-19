@@ -6,4 +6,3 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 2000:8080
-    image: gcr.io/weburn-376622/weburn-pos-buy
