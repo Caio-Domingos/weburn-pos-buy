@@ -10,5 +10,5 @@ export const environment = {
     measurementId: 'G-WNW79K3MJ7',
   },
   functionsUrl:
-    'https://us-central1-weburn-voucher-dispenser-v2.cloudfunctions.net',
+    'https://us-central1-weburn-voucher-dispenser-v2.cloudfunctions.net/',
 };

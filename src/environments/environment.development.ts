@@ -9,5 +9,5 @@ export const environment = {
     messagingSenderId: '124727929749',
     measurementId: 'G-WNW79K3MJ7',
   },
-  functionsUrl: 'http://localhost:5001/weburn-voucher-dispenser-v2/us-central1',
+  functionsUrl: 'http://localhost:5001/weburn-voucher-dispenser-v2/us-central1/',
 };
